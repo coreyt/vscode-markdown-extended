@@ -8,11 +8,13 @@ export function MarkdownItExportHelper(md: MarkdownIt) {
     md.core.ruler.push("exportHelper", exportHelperWorker);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function exportHelperWorker(state: any) {
     let env = (state.env as MarkdownItEnv).htmlExporter;
     if (!env) return;
     enumTokens(state.tokens, env);
 }
+
 function enumTokens(tokens: Token[], env: HtmlExporterEnv) {
     tokens.map(t => {
         if (t.type == "image") {
@@ -22,6 +24,7 @@ function enumTokens(tokens: Token[], env: HtmlExporterEnv) {
         if (t.children) enumTokens(t.children, env);
     });
 }
+
 function removeVsUri(token: Token, env: HtmlExporterEnv) {
     let index = 0;
     let src = "";
@@ -33,6 +36,7 @@ function removeVsUri(token: Token, env: HtmlExporterEnv) {
     }
     token.attrs[index][1] = decodeURIComponent(src.replace(env.vsUri, ""));
 }
+
 function embedImage(token: Token, env: HtmlExporterEnv) {
     let index = 0;
     let src = "";
@@ -45,6 +49,7 @@ function embedImage(token: Token, env: HtmlExporterEnv) {
     }
     token.attrs[index][1] = image2Base64(src, env);
 }
+
 function image2Base64(src: string, env: HtmlExporterEnv): string {
     let paths = [path.dirname(env.uri.fsPath)];
     if (env.workspaceFolder) paths.push(env.workspaceFolder.fsPath);
@@ -53,7 +58,7 @@ function image2Base64(src: string, env: HtmlExporterEnv): string {
     return fileToDataUri(file)
 }
 
-function searchFile(name: string, paths: string[]): string {
+function searchFile(name: string, paths: string[]): string | undefined {
     if (path.isAbsolute(name)) return name;
     for (let p of paths) {
         let file = path.join(p, name);

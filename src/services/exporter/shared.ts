@@ -10,10 +10,10 @@ export function renderPage(
     document: MarkdownDocument | vscode.TextDocument,
     injectStyle?: string
 ): string {
-    let doc: MarkdownDocument = undefined;
+    let doc: MarkdownDocument;
     if (document instanceof MarkdownDocument)
         doc = document;
-    else if (document.getText)
+    else
         doc = new MarkdownDocument(document);
 
     let title = doc.meta.raw.title || path.basename(doc.document.uri.fsPath);
@@ -37,7 +37,7 @@ export function renderHTML(doc: MarkdownDocument): string {
     let content = markdown.render(doc.content, env);
     return content.trim();
 }
-function getworkspaceFolder(uri): vscode.Uri {
+function getworkspaceFolder(uri: vscode.Uri): vscode.Uri | undefined {
     let root = vscode.workspace.getWorkspaceFolder(uri);
     return (root && root.uri) ? root.uri : undefined;
 }

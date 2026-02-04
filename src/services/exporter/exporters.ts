@@ -7,7 +7,7 @@ export async function pickFormat(): Promise<exportFormat> {
     return exportFormat.HTML;
 }
 
-export async function pickExporter(format: exportFormat): Promise<MarkdownExporter> {
+export async function pickExporter(format: exportFormat): Promise<MarkdownExporter | undefined> {
     let availableExporters = getAvailableExporters(format);
     if (availableExporters.length == 1) return availableExporters[0].exporter;
     let pick = await vscode.window.showQuickPick<ExporterQuickPickItem>(

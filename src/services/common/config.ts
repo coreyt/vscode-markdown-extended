@@ -7,19 +7,19 @@ class Config extends ConfigReader {
 
     onChange() { }
     get disabledPlugins(): string[] {
-        let conf = this.read<string>('disabledPlugins').trim();
+        let conf = this.read<string>('disabledPlugins');
         if (!conf) return [];
-        return conf.toLowerCase().split(',').map(p => p.trim());
+        return conf.trim().toLowerCase().split(',').map(p => p.trim());
     }
-    get tocLevels(): Number[] {
-        let conf = this.read<Number[]>('tocLevels');
+    get tocLevels(): number[] {
+        let conf = this.read<number[]>('tocLevels');
         if (!(conf instanceof Array)) conf = [];
-        if (conf.length) conf = conf.filter(c => typeof c == "number");
+        if (conf.length) conf = conf.filter((c): c is number => typeof c === "number");
         if (!conf.length) return [1, 2, 3];
         return conf;
     }
     get exportOutDirName(): string {
-        return this.read<string>('exportOutDirName');
+        return this.read<string>('exportOutDirName') ?? '';
     }
 }
 

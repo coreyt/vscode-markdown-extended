@@ -10,7 +10,7 @@ export function cssFileToDataUri(cssFileName: string): string {
     if (!fs.existsSync(cssFileName))
         return "";
     let css = fs.readFileSync(cssFileName).toString();
-    css = css.replace(URL_REG, (substr, ...args: any[]) => {
+    css = css.replace(URL_REG, (substr, ...args: string[]) => {
         let filePath: string = args[0] || args[1];
         if (filePath.substr(0, 5).toLocaleLowerCase() == "data:") {
             return substr;
@@ -33,7 +33,7 @@ export function cssFileToDataUri(cssFileName: string): string {
  */
 export function fileToDataUri(fileName: string): string {
     if (!fs.existsSync(fileName))
-        return null;
+        return "";
     let schema = getDataUriSchema(fileName);
     let buf = fs.readFileSync(fileName);
     return `${schema}${buf.toString("base64")}`
@@ -46,7 +46,7 @@ export function fileToDataUri(fileName: string): string {
  */
 export function getDataUriSchema(fileName: string): string {
     let ext = path.extname(fileName).toLowerCase();
-    let mimeType = null;
+    let mimeType = "application/octet-stream";
     switch (ext) {
         case ".js":
             mimeType = "text/javascript"
@@ -65,6 +65,7 @@ export function getDataUriSchema(fileName: string): string {
             break;
         case ".ttf":
             mimeType = "font/ttf"
+            break;
         case ".sfnt":
             mimeType = "font/sfnt"
             break;

@@ -25,7 +25,7 @@ export function MarkdownItAdmonition(md: MarkdownIt) {
     md.renderer.rules["admonition_close"] = render;
 }
 
-function render(tokens: Token[], idx: number, _options: any, env: any, self: Renderer) {
+function render(tokens: Token[], idx: number, _options: unknown, env: unknown, self: Renderer) {
     var token = tokens[idx];
     if (token.type === "admonition_open") {
         tokens[idx].attrJoin("class", "admonition " + token.info);
@@ -35,6 +35,7 @@ function render(tokens: Token[], idx: number, _options: any, env: any, self: Ren
     return self.renderToken(tokens, idx, _options);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function admonition(state: any, startLine: number, endLine: number, silent: boolean) {
     // if it's indented more than 3 spaces, it should be a code block
     if (state.tShift[startLine] - state.blkIndent >= 4) return false;
@@ -59,16 +60,16 @@ function admonition(state: any, startLine: number, endLine: number, silent: bool
     if (quoteIdx >= 0) {
         classes = params.substring(0, quoteIdx).trim()
             .split(" ")
-            .map(s => s.trim())
-            .filter(s => !!s);
-        type = classes[0];
+            .map((s: string) => s.trim())
+            .filter((s: string) => !!s);
+        type = classes[0] || "note";
         title = params.substring(quoteIdx);
         if (_types.indexOf(type) < 0) {
             classes.unshift("note");
             type = "note";
         }
     } else {
-        type = params.split(" ").shift().toLowerCase();
+        type = params.split(" ").shift()?.toLowerCase() || "note";
         if (_types.indexOf(type) < 0) {
             type = "note";
             title = params;

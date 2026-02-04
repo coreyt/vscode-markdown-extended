@@ -6,7 +6,7 @@ export interface MarkdownItEnv {
 
 export interface HtmlExporterEnv {
     uri: vscode.Uri,
-    workspaceFolder: vscode.Uri,
+    workspaceFolder: vscode.Uri | undefined,
     vsUri: string,
     embedImage: boolean,
 }

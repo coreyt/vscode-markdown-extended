@@ -33,7 +33,7 @@ export function getTableEdit(editor: vscode.TextEditor, table: DocumentTable, et
     let offsetLine = 0;
     let offsetCharachter = 0;
 
-    let rng: SelectedRange = undefined;
+    let rng: SelectedRange;
     if (tt == targetType.row) {
         rng = getSelectedRow(table, selection, et == editType.add ? before : true);
         switch (et) {
@@ -104,16 +104,19 @@ function getSelectedRow(table: DocumentTable, selection: vscode.Selection, inser
         table.range.end
     );
     let intersection = tableBodyRange.intersection(selection);
+    let effectiveRange: vscode.Range;
     if (intersection) {
         rowStart = intersection.start.line - tableBodyRange.start.line;
         rowCount = intersection.end.line - intersection.start.line + 1;
+        effectiveRange = intersection;
     } else {
         rowStart = 0;
         rowCount = 1;
+        effectiveRange = new vscode.Range(tableBodyRange.start, tableBodyRange.start);
     }
     if (!insertBefore) rowStart += rowCount;
     return {
-        range: intersection,
+        range: effectiveRange,
         start: rowStart,
         count: rowCount,
     }
@@ -122,8 +125,15 @@ function getSelectedRow(table: DocumentTable, selection: vscode.Selection, inser
 // if not insert, insertBefore should be always true
 function getSelectedColumn(table: DocumentTable, selection: vscode.Selection, insertBefore: boolean, document: vscode.TextDocument): SelectedRange {
     let intersectSelection = selection.intersection(table.range);
+    if (!intersectSelection) {
+        return {
+            range: new vscode.Range(table.range.start, table.range.start),
+            start: 0,
+            count: 1,
+        };
+    }
     let selectionStartLine = document.lineAt(intersectSelection.start.line).range;
-    let effectiveRange = intersectSelection.intersection(selectionStartLine);
+    let effectiveRange = intersectSelection.intersection(selectionStartLine) ?? new vscode.Range(selectionStartLine.start, selectionStartLine.start);
     let selectionEndLine = document.lineAt(intersectSelection.end.line).range;
     let colStart = -1;
     let colCount = 0;
@@ -175,5 +185,5 @@ function getRowCells(document: vscode.TextDocument, line: vscode.Range): vscode.
         pos += c.length + 1; //cell.length + '|'.length
         if ((i == 0 || i == ar.length - 1) && !c.trim()) return undefined;
         return new vscode.Range(start, end);
-    }).filter(r => r !== undefined);
+    }).filter((r): r is vscode.Range => r !== undefined);
 }

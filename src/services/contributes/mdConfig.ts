@@ -20,7 +20,8 @@ class MDConfig extends ConfigReader {
             embedded: [],
             linked: [],
         };
-        let stylePathes = this.read<string[]>('styles', uri, (root, value) => {
+        let stylePathes = this.read<string[]>('styles', uri, (root, value): string[] => {
+            if (!value) return [];
             return value.map(v => {
                 if (!ISURL.test(v) && !path.isAbsolute(v))
                     v = path.join(root.fsPath, v);

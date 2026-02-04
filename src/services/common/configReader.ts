@@ -8,7 +8,7 @@ export abstract class ConfigReader extends vscode.Disposable {
 
     private _section: string;
     private _disposable: vscode.Disposable;
-    private _conf: vscode.WorkspaceConfiguration;
+    private _conf!: vscode.WorkspaceConfiguration;
     private _folderConfs: ConfigMap = {};
 
     constructor(section: string) {
@@ -29,14 +29,14 @@ export abstract class ConfigReader extends vscode.Disposable {
      * read the value of a window scope setting.
      * @param key the key name of a setting
      */
-    read<T>(key: string): T;
+    read<T>(key: string): T | undefined;
 
     /**
      * read the value of a source scope setting.
      * @param key the key name of a setting
      * @param uri target uri to get setting for
      */
-    read<T>(key: string, uri: vscode.Uri): T;
+    read<T>(key: string, uri: vscode.Uri): T | undefined;
 
     /**
      * read and convert the value of a source scope setting.
@@ -44,8 +44,8 @@ export abstract class ConfigReader extends vscode.Disposable {
      * @param uri target uri to get setting for
      * @param func the function to convert the setting value. eg.: convert a relative path to absolute.
      */
-    read<T>(key: string, uri: vscode.Uri, func: (workspaceFolder: vscode.Uri, value: T) => T): T;
-    read<T>(key: string, ...para: any[]): T {
+    read<T>(key: string, uri: vscode.Uri, func: (workspaceFolder: vscode.Uri, value: T | undefined) => T): T;
+    read<T>(key: string, ...para: unknown[]): T | undefined {
         if (!para || !para.length || !para[0]) return this._conf.get<T>(key); // no uri? return global value.
         let uri = para.shift() as vscode.Uri;
         let folder = vscode.workspace.getWorkspaceFolder(uri);
@@ -57,23 +57,23 @@ export abstract class ConfigReader extends vscode.Disposable {
         }
         let results = folderConf.inspect<T>(key);
 
-        let func: (settingRoot: vscode.Uri, settingValue: T) => T = undefined;
-        if (para.length) func = para.shift();
+        let func: ((settingRoot: vscode.Uri, settingValue: T | undefined) => T) | undefined = undefined;
+        if (para.length) func = para.shift() as (settingRoot: vscode.Uri, settingValue: T | undefined) => T;
 
-        let value: T = undefined;
-        if (results.workspaceFolderValue !== undefined)
+        let value: T | undefined = undefined;
+        if (results?.workspaceFolderValue !== undefined)
             value = results.workspaceFolderValue;
-        else if (results.workspaceValue !== undefined)
+        else if (results?.workspaceValue !== undefined)
             value = results.workspaceValue;
-        else if (results.globalValue !== undefined)
+        else if (results?.globalValue !== undefined)
             value = results.globalValue;
         else
-            value = results.defaultValue;
+            value = results?.defaultValue;
         if (func && folder && folder.uri) return func(folder.uri, value);
         return value;
     }
 
-    abstract onChange(...args: any[]): any;
+    abstract onChange(...args: unknown[]): unknown;
 
     private getConfObjects(configName: string) {
         this._conf = vscode.workspace.getConfiguration(configName);

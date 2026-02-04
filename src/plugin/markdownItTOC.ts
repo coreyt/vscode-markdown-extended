@@ -1,5 +1,5 @@
 import { MarkdownIt, Token } from '../@types/markdown-it';
-import * as toc from 'markdown-it-table-of-contents';
+import toc from 'markdown-it-table-of-contents';
 import { slugify } from './shared';
 import { config } from '../services/common/config';
 
@@ -16,9 +16,10 @@ function renderHtml(tokens: Token[], idx: number) {
     return `<a for="toc-anchor" id="${slugify(token.content)}"></a>`;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function tocAnchorWorker(state: any) {
     let tokens: Token[] = [];
-    state.tokens.map((t, i, ts) => {
+    state.tokens.map((t: Token, i: number, ts: Token[]) => {
         if (t.type == "heading_open") {
             let anchor = new state.Token("tocAnchor", "a", 0);
             anchor.content = ts[i + 1].content;

@@ -1,4 +1,3 @@
-import { Command } from './command';
 import * as vscode from 'vscode';
 import { toggleFormat } from '../services/helpers/toggleFormat';
 import { CommandConfig, Commands } from './commands';
@@ -122,8 +121,10 @@ function toggle(
     on: RegExp, onReplace: string,
     off: RegExp, offReplace: string
 ) {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
     toggleFormat(
-        vscode.window.activeTextEditor,
+        editor,
         detect, on, onReplace, off, offReplace, multiLine
     );
 }

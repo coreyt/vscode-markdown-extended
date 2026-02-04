@@ -2,8 +2,8 @@
 import * as csv from 'papaparse';
 import { MDTable } from './mdTable';
 
-export function parse(source: string): MDTable {
-    let table = csv.parse(source);
+export function parse(source: string): MDTable | undefined {
+    let table = csv.parse<string[]>(source);
     if (table.errors.length) return undefined;
     //use "new MDTable(table.data)" to do the data regularization, then escape chr
     let data = escapeChars(new MDTable(table.data, 1));

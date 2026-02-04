@@ -42,6 +42,7 @@ async function getFileList(arg?: vscode.Uri | vscode.Uri[]): Promise<vscode.Uri[
     } else if (arg instanceof vscode.Uri) {
         if (fs.statSync(arg.fsPath).isDirectory()) {
             let folder = vscode.workspace.getWorkspaceFolder(arg);
+            if (!folder) return [];
             let relPath = path.relative(folder.uri.fsPath, arg.fsPath);
             if (relPath) relPath += '/';
             let files = await vscode.workspace.findFiles(`${relPath}**/*.md`, "");
