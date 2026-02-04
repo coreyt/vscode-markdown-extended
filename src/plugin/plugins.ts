@@ -19,19 +19,31 @@ const myPlugins: Record<string, Function> = {
     'markdown-it-html5-media': html5Media,
 }
 
-// Export-only plugins (not needed for preview rendering)
-const exportOnlyPlugins: Record<string, Function> = {
-    'markdown-it-helper': MarkdownItExportHelper,
-}
-
 /**
- * Plugins used for live preview rendering.
- * Optimized for speed - excludes export-only plugins.
+ * Plugins organized by performance impact.
+ * Users can disable expensive plugins via markdownExtended.disabledPlugins
+ *
+ * ESSENTIAL (low overhead):
+ *   - footnote, abbr, sup, sub, checkbox, kbd, underline, mark, deflist, attrs
+ *
+ * MODERATE (some overhead):
+ *   - container, admonition, html5-media
+ *
+ * EXPENSIVE (consider disabling for large docs):
+ *   - toc (scans all headings, has debounce)
+ *   - multimd-table (complex table parsing with rowspan/colspan)
  */
 export const plugins: MarkdownItPlugin[] = [
+    // === EXPENSIVE: Consider disabling for large documents ===
     $('markdown-it-table-of-contents', { includeLevel: config.tocLevels }),
+    $('markdown-it-multimd-table', { multiline: true, rowspan: true, headerless: true }),
+
+    // === MODERATE: Block-level processing ===
     $('markdown-it-container'),
     $('markdown-it-admonition'),
+    $('markdown-it-html5-media'),
+
+    // === ESSENTIAL: Low overhead inline/block plugins ===
     $('markdown-it-footnote'),
     $('markdown-it-abbr'),
     $('markdown-it-sup'),
@@ -42,14 +54,11 @@ export const plugins: MarkdownItPlugin[] = [
     $('markdown-it-underline'),
     $('markdown-it-mark'),
     $('markdown-it-deflist'),
-    $('markdown-it-emoji'),
-    $('markdown-it-multimd-table', { multiline: true, rowspan: true, headerless: true }),
-    $('markdown-it-html5-media'),
 ].filter((p): p is MarkdownItPlugin => !!p);
 
 /**
  * Get the export helper plugin for HTML export operations.
- * This is separate from preview plugins to avoid unnecessary processing during live preview.
+ * Separate from preview plugins to avoid unnecessary processing during live preview.
  */
 export function getExportPlugin(): MarkdownItPlugin {
     return {
