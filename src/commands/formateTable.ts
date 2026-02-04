@@ -2,9 +2,11 @@ import { Command } from './command';
 import * as vscode from 'vscode';
 import { editTextDocument, Edit } from '../services/common/editTextDocument';
 import { tablesOf } from '../services/table/documentTables';
+
 export class CommandFormateTable extends Command {
     execute() {
         let editor = vscode.window.activeTextEditor;
+        if (!editor) return;
         let selection = editor.selection;
         let tables = tablesOf(editor.document);
         let edits: Edit[] = [];

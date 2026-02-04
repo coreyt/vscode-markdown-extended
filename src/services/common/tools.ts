@@ -29,7 +29,7 @@ export function isSubPath(from: string, to: string): boolean {
     return !(path.isAbsolute(rel) || rel.substr(0, 2) == "..")
 }
 
-export function mkdirs(dirname, callback) {
+export function mkdirs(dirname: string, callback: () => void) {
     fs.exists(dirname, function (exists) {
         if (exists) {
             callback();
@@ -41,7 +41,7 @@ export function mkdirs(dirname, callback) {
     });
 }
 
-export function mkdirsSync(dirname) {
+export function mkdirsSync(dirname: string): boolean {
     if (fs.existsSync(dirname)) {
         return true;
     } else {
@@ -50,30 +50,30 @@ export function mkdirsSync(dirname) {
             return true;
         }
     }
+    return false;
 }
 
-export function parseError(error: any): string {
-    let nb = Buffer.alloc(0);
+export function parseError(error: unknown): string {
     if (typeof (error) === "string") {
         return error;
     } else if (error instanceof TypeError || error instanceof Error) {
         let err = error as TypeError;
         return err.message + '\n' + err.stack;
     } else if (error instanceof Array) {
-        let arrs = error as any[];
+        let arrs = error as Error[];
         return arrs.reduce((p, err) => p + '\n\n' + err.message + '\n' + err.stack, "");
     } else {
-        return error.toString();
+        return String(error);
     }
 }
 
-export function showMessagePanel(message: any) {
+export function showMessagePanel(message: unknown) {
     outputPanel.clear();
     outputPanel.appendLine(parseError(message));
     outputPanel.show();
 }
 
-export function mergeSettings(...args: any[]) {
+export function mergeSettings(...args: Record<string, unknown>[]) {
     return args.reduce((p, c) => {
         return Object.assign(p, c);
     }, {});

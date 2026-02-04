@@ -1,13 +1,13 @@
 import { Command } from './command';
 import * as vscode from 'vscode';
-import * as clip from 'clipboardy';
+import clipboard from 'clipboardy';
 import { renderPage, renderHTML, ensureMarkdownEngine } from '../services/exporter/shared';
 import { MarkdownDocument } from '../services/common/markdownDocument';
 
 export class CommandCopy extends Command {
     async execute() {
-        clip.write(await renderMarkdown(false))
-            .then(() => vscode.window.showInformationMessage("Copy success."));
+        await clipboard.write(await renderMarkdown(false));
+        vscode.window.showInformationMessage("Copy success.");
     }
     constructor() {
         super("markdownExtended.copy");
@@ -16,8 +16,8 @@ export class CommandCopy extends Command {
 
 export class CommandCopyWithStyles extends Command {
     async execute() {
-        return clip.write(await renderMarkdown(true))
-            .then(() => vscode.window.showInformationMessage("Copy success."));
+        await clipboard.write(await renderMarkdown(true));
+        vscode.window.showInformationMessage("Copy success.");
     }
     constructor() {
         super("markdownExtended.copyWithStyle");
@@ -26,8 +26,12 @@ export class CommandCopyWithStyles extends Command {
 
 async function renderMarkdown(style: boolean): Promise<string> {
     await ensureMarkdownEngine();
-    let document = vscode.window.activeTextEditor.document;
-    let selection = vscode.window.activeTextEditor.selection;
+    let editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        throw new Error("No active editor");
+    }
+    let document = editor.document;
+    let selection = editor.selection;
     let rendered = "";
     let doc: MarkdownDocument;
     if (selection.isEmpty)

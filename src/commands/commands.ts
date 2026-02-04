@@ -3,7 +3,9 @@ import { showMessagePanel } from '../services/common/tools';
 
 export interface CommandConfig {
     commandId: string;
-    worker: (...args) => any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    worker: (...args: any[]) => any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     args: any[],
 }
 
@@ -26,7 +28,8 @@ export class Commands extends Disposable {
         this._disposables && this._disposables.length && this._disposables.map(d => d.dispose());
     }
 
-    private makeExecutor(func: (...args) => any, ...args: any[]): () => any {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private makeExecutor(func: (...args: any[]) => any, ...args: any[]): () => void {
         return () => {
             try {
                 let pm = func(...args);
@@ -39,4 +42,3 @@ export class Commands extends Disposable {
         }
     }
 }
-

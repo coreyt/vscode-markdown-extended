@@ -2,8 +2,9 @@ import { MDTable, TableAlign } from "./mdTable";
 import { MonoSpaceLength } from "./monospace";
 export function stringifyMDTable(table: MDTable, compact?: boolean, padding?: number): string {
     padding = padding || 1;
-    let rows = table.data.map((row, i) => table.indentation + stringifyRow(row, table.columnWidths, table.aligns, table.rowMergeFlags[i], compact, padding));
-    let Sep = table.indentation + stringifyHeaderSeperator(table, compact, padding);
+    const isCompact = compact ?? false;
+    let rows = table.data.map((row, i) => table.indentation + stringifyRow(row, table.columnWidths, table.aligns, table.rowMergeFlags[i], isCompact, padding));
+    let Sep = table.indentation + stringifyHeaderSeperator(table, isCompact, padding);
     rows.splice(table.headerRowCount, 0, Sep);
     return rows.join('\n');
 }
