@@ -16,13 +16,19 @@ const myPlugins: Record<string, Function> = {
     'markdown-it-container': MarkdownItContainer,
     'markdown-it-admonition': MarkdownItAdmonition,
     'markdown-it-anchor': MarkdownItAnchorLink,
-    'markdown-it-helper': MarkdownItExportHelper,
     'markdown-it-html5-media': html5Media,
 }
 
+// Export-only plugins (not needed for preview rendering)
+const exportOnlyPlugins: Record<string, Function> = {
+    'markdown-it-helper': MarkdownItExportHelper,
+}
+
+/**
+ * Plugins used for live preview rendering.
+ * Optimized for speed - excludes export-only plugins.
+ */
 export const plugins: MarkdownItPlugin[] = [
-    // $('markdown-it-toc'),
-    // $('markdown-it-anchor'), // MarkdownItAnchorLink requires MarkdownItTOC
     $('markdown-it-table-of-contents', { includeLevel: config.tocLevels }),
     $('markdown-it-container'),
     $('markdown-it-admonition'),
@@ -39,12 +45,22 @@ export const plugins: MarkdownItPlugin[] = [
     $('markdown-it-emoji'),
     $('markdown-it-multimd-table', { multiline: true, rowspan: true, headerless: true }),
     $('markdown-it-html5-media'),
-    $('markdown-it-helper')
 ].filter((p): p is MarkdownItPlugin => !!p);
 
+/**
+ * Get the export helper plugin for HTML export operations.
+ * This is separate from preview plugins to avoid unnecessary processing during live preview.
+ */
+export function getExportPlugin(): MarkdownItPlugin {
+    return {
+        plugin: MarkdownItExportHelper,
+        args: [],
+    };
+}
+
 function $(name: string, ...args: unknown[]): MarkdownItPlugin | undefined {
-    for (let d of config.disabledPlugins) {
-        if ('markdown-it-' + d == name) return undefined;
+    for (const d of config.disabledPlugins) {
+        if ('markdown-it-' + d === name) return undefined;
     }
     let plugin = myPlugins[name];
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -53,5 +69,5 @@ function $(name: string, ...args: unknown[]): MarkdownItPlugin | undefined {
     return {
         plugin: plugin,
         args: args,
-    }
+    };
 }
