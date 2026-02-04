@@ -1,14 +1,17 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es6",
+        "target": "ES2020",
         "outDir": "out",
         "lib": [
-            "dom",
-            "es6"
+            "DOM",
+            "ES2020"
         ],
         "sourceMap": true,
         "rootDir": ".",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
         "typeRoots": [
             "node_modules/@types",
             "src/@types"
@@ -16,6 +19,7 @@
     },
     "exclude": [
         "node_modules",
-        ".vscode-test"
+        ".vscode-test",
+        "test"
     ]
 }

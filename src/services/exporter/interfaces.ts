@@ -4,16 +4,11 @@ import { MarkdownDocument } from '../common/markdownDocument';
 export type Progress = vscode.Progress<{ message?: string; increment?: number }>;
 
 export enum exportFormat {
-    PDF = "pdf",
     HTML = "html",
-    JPG = "jpg",
-    PNG = "png",
 }
 
 export enum exporterType {
     HTML,
-    Phantom,
-    Puppeteer,
 }
 
 export interface FormatQuickPickItem extends vscode.QuickPickItem {
