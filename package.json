@@ -237,7 +237,9 @@
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "package": "npm run check-types && node esbuild.js --production",
     "check-types": "tsc --noEmit",
-    "benchmark": "npx tsx test/benchmark.ts"
+    "benchmark": "npx tsx test/benchmark.ts",
+    "vsix": "npm run package && vsce package --no-dependencies",
+    "install-local": "npm run vsix && code --install-extension markdown-extended-*.vsix"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
@@ -246,6 +248,7 @@
     "@types/node": "^18.0.0",
     "@types/papaparse": "^5.5.2",
     "@types/vscode": "^1.75.0",
+    "@vscode/vsce": "^3.7.1",
     "esbuild": "^0.27.2",
     "markdown-it": "^14.1.0",
     "mocha": "^11.7.5",
