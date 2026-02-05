@@ -49,7 +49,7 @@ export const plugins: MarkdownItPlugin[] = [
     $('markdown-it-sup'),
     $('markdown-it-sub'),
     $('markdown-it-checkbox'),
-    $('markdown-it-attrs2/lite'),
+    $('markdown-it-attrs2/full'),
     $('markdown-it-kbd'),
     $('markdown-it-underline'),
     $('markdown-it-mark'),
