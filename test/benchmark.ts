@@ -69,7 +69,7 @@ function example(): void {
 `;
 
 // Plugin configurations
-const PLUGINS: Record<string, { pkg: string; args?: unknown[] }> = {
+const PLUGINS: Record<string, { pkg: string; args?: unknown[]; isLocal?: boolean }> = {
     'toc': { pkg: 'markdown-it-table-of-contents', args: [{ includeLevel: [1, 2, 3] }] },
     'multimd-table': { pkg: 'markdown-it-multimd-table', args: [{ multiline: true, rowspan: true }] },
     'container': { pkg: 'markdown-it-container', args: ['container'] },
@@ -78,7 +78,10 @@ const PLUGINS: Record<string, { pkg: string; args?: unknown[] }> = {
     'sup': { pkg: 'markdown-it-sup' },
     'sub': { pkg: 'markdown-it-sub' },
     'checkbox': { pkg: 'markdown-it-checkbox' },
-    'attrs': { pkg: 'markdown-it-attrs' },
+    'attrs (original)': { pkg: 'markdown-it-attrs' },
+    'attrs2-lite': { pkg: 'markdown-it-attrs2/optimized-attrs-lite' },
+    'attrs2-v2': { pkg: 'markdown-it-attrs2/optimized-attrs-v2' },
+    'attrs2-v3': { pkg: 'markdown-it-attrs2/optimized-attrs-v3' },
     'kbd': { pkg: 'markdown-it-kbd' },
     'underline': { pkg: 'markdown-it-underline' },
     'mark': { pkg: 'markdown-it-mark' },
