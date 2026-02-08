@@ -1,5 +1,12 @@
 # Change Log
 
+## v2.0.0
+
+- **Optimization**: Significantly improved markdown rendering performance by skipping expensive plugins (Admonition, Container) when their syntax is not present.
+- **Fix**: Resolved an issue where Scroll Lock synchronization could break for Container blocks by preserving source line attributes.
+- **Security**: Replaced unsafe `eval()` usage in template rendering with a safer implementation.
+- **Infrastructure**: Modernized test suite with `@vscode/test-electron` and added automated performance benchmarks.
+
 ## v1.1.3
 
 Fix: Get chromium revision for puppeteer downloading
