@@ -27,5 +27,7 @@
     "markdownExtended.MoveColumnRight": "左移列",
     "markdownExtended.configuration.exportOutDirName": "导出文件将被组织到项目根目录下以此设置为名称的目录下。",
     "markdownExtended.configuration.tocLevels": "生成目录(TOC)时采用的标题层级 (例如，2 表示 h2)。\n* 需重启 VSCode 生效。",
-    "markdownExtended.configuration.disabledPlugins": "停用此扩展集成的某些插件。如: 'underline, toc'。 \n* 需重启 VSCode 生效。"
+    "markdownExtended.configuration.disabledPlugins": "停用此扩展集成的某些插件。如: 'underline, toc'。 \n* 需重启 VSCode 生效。",
+    "markdownExtended.configuration.autoDisableExpensivePluginsInPreview": "在大型 Markdown 文件预览时自动跳过高开销插件。",
+    "markdownExtended.configuration.previewLargeDocLineThreshold": "触发大文档预览模式的行数阈值。设为 0 可关闭该优化。"
 }

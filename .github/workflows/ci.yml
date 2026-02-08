@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run test:perf
+        env:
+          PERF_ROUNDS: "5"
+          PERF_ITERATIONS: "24"
+          PERF_RENDER_MEDIAN_BUDGET_MS: "180"
+          PERF_REQUIRED_MEDIAN_RATIO: "0.95"
+          PERF_MIN_FASTER_RUNS: "4"

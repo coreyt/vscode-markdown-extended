@@ -3,7 +3,7 @@ import { MarkdownIt, Token, Renderer } from "../@types/markdown-it";
 const
     _marker = 33 /* '!' */,
     _minMarkerLen = 3,
-    _types = [
+    _types = new Set([
         "note",  //rgba(68,138,255,.1) "\E3C9"
         "summary", "abstract", "tldr",  //rgba(0,176,255,.1) "\E8D2"
         "info", "todo",   //rgba(0,184,212,.1) "\E88E"
@@ -15,7 +15,7 @@ const
         "danger", "error", "bug", //rgba(255,23,68,.1) "\E3E7""\E14C""\E868"
         "example", "snippet", //rgba(101,31,255,.1) "\E242"
         "quote", "cite",   //rgba(158, 158, 158, .1) "\E244"
-    ];
+    ]);
 
 export function MarkdownItAdmonition(md: MarkdownIt) {
     md.block.ruler.after("fence", "admonition", admonition, {});
@@ -64,13 +64,13 @@ function admonition(state: any, startLine: number, endLine: number, silent: bool
             .filter((s: string) => !!s);
         type = classes[0] || "note";
         title = params.substring(quoteIdx);
-        if (_types.indexOf(type) < 0) {
+        if (!_types.has(type)) {
             classes.unshift("note");
             type = "note";
         }
     } else {
         type = params.split(" ").shift()?.toLowerCase() || "note";
-        if (_types.indexOf(type) < 0) {
+        if (!_types.has(type)) {
             type = "note";
             title = params;
         } else {

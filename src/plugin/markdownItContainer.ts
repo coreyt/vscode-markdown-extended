@@ -1,4 +1,4 @@
-import { MarkdownIt, Token } from '../@types/markdown-it';
+import { MarkdownIt, Token, Renderer } from '../@types/markdown-it';
 import container from 'markdown-it-container';
 
 export function MarkdownItContainer(md: MarkdownIt) {
@@ -9,20 +9,15 @@ function validate(): boolean {
     return true;
 }
 
-function render(tokens: Token[], idx: number): string {
-    if (tokens[idx].nesting === 1) {
+function render(tokens: Token[], idx: number, _options: unknown, env: unknown, self: Renderer): string {
+    const token = tokens[idx];
+    if (token.nesting === 1) {
         // opening tag
-        let cls = escape(tokens[idx].info.trim());
-        return `<div class="${cls}">\n`;
-    } else {
-        // closing tag
-        return '</div>\n';
+        const info = token.info.trim();
+        if (info) {
+            token.attrJoin('class', info);
+        }
     }
+    return self.renderToken(tokens, idx, _options);
 }
 
-function escape(str: string): string {
-    return str.replace(/"/g, '&quot;', )
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-}

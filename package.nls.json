@@ -27,5 +27,7 @@
     "markdownExtended.MoveColumnRight": "Move Columns Right",
     "markdownExtended.configuration.exportOutDirName": "Export files will be organized in a directory named with value specified here.",
     "markdownExtended.configuration.tocLevels": "Headings levels to use when generating TOC (2 for h2, etc)\n* Restart VSCode required.",
-    "markdownExtended.configuration.disabledPlugins": "Disable some plugins intergrated by this extension. E.g.: 'underline, toc'. \n* Restart VSCode required."
+    "markdownExtended.configuration.disabledPlugins": "Disable some plugins intergrated by this extension. E.g.: 'underline, toc'. \n* Restart VSCode required.",
+    "markdownExtended.configuration.autoDisableExpensivePluginsInPreview": "Automatically skip expensive preview plugins for large markdown files.",
+    "markdownExtended.configuration.previewLargeDocLineThreshold": "Line count threshold for large-document preview mode. Set 0 to disable large-document optimization."
 }

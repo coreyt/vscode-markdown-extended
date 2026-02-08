@@ -9,14 +9,47 @@ import * as assert from 'assert';
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from 'vscode';
-import * as myExtension from '../src/extension';
+import MarkdownIt from 'markdown-it';
 
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", () => {
 
-    // Defines a Mocha unit test
-    test("Something 1", () => {
-        assert.equal(-1, [1, 2, 3].indexOf(5));
-        assert.equal(-1, [1, 2, 3].indexOf(0));
+    test("Debug environment", () => {
+        console.log('CWD:', process.cwd());
+        console.log('ExecPath:', process.execPath);
+        assert.ok(process.cwd(), 'CWD should exist');
+    });
+
+    test("Activates and wires markdown-it plugins", async () => {
+        const ext = vscode.extensions.getExtension('jebbs.markdown-extended');
+        assert.ok(ext, 'Extension not found');
+
+        try {
+            const api = await ext?.activate();
+            assert.ok(api?.extendMarkdownIt, 'API not exposed');
+
+            const md = new MarkdownIt();
+            api.extendMarkdownIt(md);
+
+            const html = md.render([
+                '::: container',
+                'content',
+                ':::',
+                '',
+                '!!! note \"Title\"',
+                '',
+                '    Body',
+                '',
+                '[Go](#My-Header)',
+            ].join('\n'));
+
+            assert.ok(html.includes('<div class=\"container\">'), 'Container not rendered');
+            assert.ok(html.includes('class=\"admonition note\"'), 'Admonition not rendered');
+            assert.ok(html.includes('class=\"admonition-title\"'), 'Admonition title not rendered');
+            assert.ok(html.includes('href=\"#my-header\"'), 'Anchor link not slugified');
+        } catch (e) {
+            console.error('Activation failed:', e);
+            throw e;
+        }
     });
 });

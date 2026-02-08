@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { markdown } from '../../extension';
 import { MarkdownDocument } from '../common/markdownDocument';
-import { template } from './template';
+import { renderTemplate } from './template';
 import { Contributes } from '../contributes/contributes';
 import { MarkdownItEnv } from '../common/interfaces';
 
@@ -22,7 +22,7 @@ export function renderPage(
     let html = renderHTML(doc);
     //should put both classes, because we cannot determine if a user style URL is a theme or not
     let mdClass = "markdown-body vscode-body vscode-light";
-    return eval(template);
+    return renderTemplate(title, styles, mdClass, html, scripts);
 }
 
 export function renderHTML(doc: MarkdownDocument): string {

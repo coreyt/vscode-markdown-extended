@@ -7,6 +7,30 @@ Markdown Extended is an extension extends syntaxes and abilities to VSCode built
 
 Markdown Extended includes lots of editing helpers and a `what you see is what you get` exporter, which means export files are consistent to what you see in markdown preview, even it contains syntaxes and styles contributed by other plugins.
 
+## Installation
+
+### From Marketplace
+
+1. Open **VS Code**.
+2. Go to the **Extensions** view (`Ctrl+Shift+X`).
+3. Search for `Markdown Extended`.
+4. Click **Install**.
+
+### From VSIX
+
+If you have downloaded or built the `.vsix` file:
+
+1. Open **VS Code**.
+2. Open the **Command Palette** (`Ctrl+Shift+P`).
+3. Type `Extensions: Install from VSIX...` and select it.
+4. Select the `.vsix` file from your file system.
+
+Alternatively, you can install it via the command line:
+
+```bash
+code --install-extension markdown-extended-2.0.0.vsix
+```
+
 ## Features
 
 - Exporter ([View Detail](#Exporter))

@@ -1,16 +1,17 @@
-export var template=
-`\`<!DOCTYPE html>
+export function renderTemplate(title: string, styles: string, mdClass: string, html: string, scripts: string): string {
+    return `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>\${title}</title>
-\${styles}
+<title>${title}</title>
+${styles}
 </head>
-<body class="\${mdClass}">
+<body class="${mdClass}">
 <div class="content">
-    \${html}
+    ${html}
 </div>
-\${scripts}
+${scripts}
 </body>
 </html>
-\``;
+`;
+}

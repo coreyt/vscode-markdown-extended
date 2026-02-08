@@ -21,6 +21,13 @@ class Config extends ConfigReader {
     get exportOutDirName(): string {
         return this.read<string>('exportOutDirName') ?? '';
     }
+    get autoDisableExpensivePluginsInPreview(): boolean {
+        return this.read<boolean>('autoDisableExpensivePluginsInPreview') ?? true;
+    }
+    get previewLargeDocLineThreshold(): number {
+        const value = this.read<number>('previewLargeDocLineThreshold');
+        return typeof value === 'number' && value >= 0 ? value : 600;
+    }
 }
 
 export const config = new Config();

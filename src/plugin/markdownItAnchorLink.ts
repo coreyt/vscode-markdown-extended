@@ -1,16 +1,14 @@
 import { MarkdownIt } from '../@types/markdown-it';
 import { slugify } from './shared';
 
-const anchorLinkReg = /\[.+?\]\(\s*#(\S+?)\s*\)/ig;
-
 interface TokenChild {
     type: string;
+    tag?: string;
     attrs?: [string, string][];
 }
 
 interface Token {
-    type: string;
-    content: string;
+    type: 'inline' | string;
     children?: TokenChild[];
 }
 
@@ -20,32 +18,20 @@ export function MarkdownItAnchorLink(md: MarkdownIt) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function anchorLinkWorker(state: any) {
-    state.tokens.map((t: Token) => {
-        if (
-            t.type == "inline" &&
-            t.children &&
-            t.children.length &&
-            anchorLinkReg.test(t.content)
-        ) {
-            let matches: RegExpExecArray | null;
-            let links: string[] = [];
-            anchorLinkReg.lastIndex = 0;
-            while ((matches = anchorLinkReg.exec(t.content)) !== null) {
-                links.push("#" + slugify(matches[1]));
-            }
-            let linkCount: number = t.children.reduce((p: number, c: TokenChild) => p += c.type == "link_open" ? 1 : 0, 0);
-            if (linkCount !== links.length) {
-                console.log("markdownExtended: Link count and link token count mismatch!");
-            } else {
-                t.children.map((child: TokenChild) => {
-                    if (child.type == "link_open") {
-                        const href = links.shift();
-                        if (href) {
-                            child.attrs = [["href", href]];
-                        }
-                    }
-                });
-            }
+    for (const t of state.tokens as Token[]) {
+        if (t.type !== 'inline' || !t.children || !t.children.length) {
+            continue;
         }
-    });
+        for (const child of t.children) {
+            if (child.type !== 'link_open' || !child.attrs) {
+                continue;
+            }
+            const href = child.attrs.find(a => a[0] === 'href');
+            if (!href || !href[1] || href[1].charAt(0) !== '#') {
+                continue;
+            }
+            const target = href[1].slice(1).trim();
+            href[1] = '#' + slugify(target);
+        }
+    }
 }
