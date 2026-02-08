@@ -48,6 +48,7 @@ export const plugins: MarkdownItPlugin[] = [
     // === ESSENTIAL: Low overhead inline/block plugins ===
     $('markdown-it-footnote'),
     $('markdown-it-abbr'),
+    $('markdown-it-anchor'),
     $('markdown-it-sup'),
     $('markdown-it-sub'),
     $('markdown-it-checkbox'),

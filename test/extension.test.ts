@@ -14,42 +14,31 @@ import MarkdownIt from 'markdown-it';
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", () => {
 
-    test("Debug environment", () => {
-        console.log('CWD:', process.cwd());
-        console.log('ExecPath:', process.execPath);
-        assert.ok(process.cwd(), 'CWD should exist');
-    });
-
     test("Activates and wires markdown-it plugins", async () => {
         const ext = vscode.extensions.getExtension('jebbs.markdown-extended');
         assert.ok(ext, 'Extension not found');
 
-        try {
-            const api = await ext?.activate();
-            assert.ok(api?.extendMarkdownIt, 'API not exposed');
+        const api = await ext?.activate();
+        assert.ok(api?.extendMarkdownIt, 'API not exposed');
 
-            const md = new MarkdownIt();
-            api.extendMarkdownIt(md);
+        const md = new MarkdownIt();
+        api.extendMarkdownIt(md);
 
-            const html = md.render([
-                '::: container',
-                'content',
-                ':::',
-                '',
-                '!!! note \"Title\"',
-                '',
-                '    Body',
-                '',
-                '[Go](#My-Header)',
-            ].join('\n'));
+        const html = md.render([
+            '::: container',
+            'content',
+            ':::',
+            '',
+            '!!! note \"Title\"',
+            '',
+            '    Body',
+            '',
+            '[Go](#My-Header)',
+        ].join('\n'));
 
-            assert.ok(html.includes('<div class=\"container\">'), 'Container not rendered');
-            assert.ok(html.includes('class=\"admonition note\"'), 'Admonition not rendered');
-            assert.ok(html.includes('class=\"admonition-title\"'), 'Admonition title not rendered');
-            assert.ok(html.includes('href=\"#my-header\"'), 'Anchor link not slugified');
-        } catch (e) {
-            console.error('Activation failed:', e);
-            throw e;
-        }
+        assert.ok(html.includes('<div class=\"container\">'), 'Container not rendered');
+        assert.ok(html.includes('class=\"admonition note\"'), 'Admonition not rendered');
+        assert.ok(html.includes('class=\"admonition-title\"'), 'Admonition title not rendered');
+        assert.ok(html.includes('href=\"#my-header\"'), 'Anchor link not slugified');
     });
 });
